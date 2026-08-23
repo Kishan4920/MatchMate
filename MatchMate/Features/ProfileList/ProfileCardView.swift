@@ -31,6 +31,7 @@ struct ProfileCardView<Destination: View>: View {
             // MARK: - Action Area
 
             actionSection
+                .padding(.bottom)
         }
         .background(.background)
         .clipShape(
@@ -107,54 +108,60 @@ struct ProfileCardView<Destination: View>: View {
     @ViewBuilder
     private var actionSection: some View {
 
-        switch profile.status {
+        ZStack {
 
-        case .pending:
+            switch profile.status {
 
-            HStack(spacing: 12) {
+            case .pending:
 
-                Button {
-                    onDecline()
-                } label: {
+                HStack(spacing: 12) {
 
-                    Text("Decline")
+                    Button {
+                        onDecline()
+                    } label: {
+
+                        Label(
+                            "Decline",
+                            systemImage: "xmark"
+                        )
                         .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
+                    }
+                    .buttonStyle(.bordered)
 
-                Button {
-                    onAccept()
-                } label: {
+                    Button {
+                        onAccept()
+                    } label: {
 
-                    Text("Accept")
+                        Label(
+                            "Accept",
+                            systemImage: "checkmark"
+                        )
                         .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.borderedProminent)
+
+            case .accepted:
+
+                Label(
+                    "Accepted",
+                    systemImage: "checkmark.circle.fill"
+                )
+                .foregroundStyle(.green)
+                .font(.title3)
+
+            case .declined:
+
+                Label(
+                    "Declined",
+                    systemImage: "xmark.circle.fill"
+                )
+                .foregroundStyle(.red)
+                .font(.title3)
             }
-            .padding(.horizontal)
-            .padding(.bottom, 16)
-
-        case .accepted:
-
-            Label(
-                "Accepted",
-                systemImage: "checkmark.circle.fill"
-            )
-            .foregroundStyle(.green)
-            .font(.headline)
-            .frame(maxWidth: .infinity)
-            .padding(.bottom, 16)
-
-        case .declined:
-
-            Label(
-                "Declined",
-                systemImage: "xmark.circle.fill"
-            )
-            .foregroundStyle(.red)
-            .font(.headline)
-            .frame(maxWidth: .infinity)
-            .padding(.bottom, 16)
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: 52)
+        .padding(.horizontal)
     }
 }

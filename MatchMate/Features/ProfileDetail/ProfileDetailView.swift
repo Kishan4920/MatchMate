@@ -4,6 +4,7 @@
 //
 //  Created by Kishan Patel on 23/08/26.
 //
+
 import SwiftUI
 
 struct ProfileDetailView: View {
@@ -11,11 +12,11 @@ struct ProfileDetailView: View {
     @StateObject private var viewModel: ProfileDetailViewModel
 
     let onStatusChanged: (ProfileStatus) -> Void
-    
+
     init(
-            profile: Profile,
-            repository: ProfileRepository,
-            onStatusChanged: @escaping (ProfileStatus) -> Void
+        profile: Profile,
+        repository: ProfileRepository,
+        onStatusChanged: @escaping (ProfileStatus) -> Void
     ) {
         _viewModel = StateObject(
             wrappedValue: ProfileDetailViewModel(
@@ -23,6 +24,7 @@ struct ProfileDetailView: View {
                 repository: repository
             )
         )
+
         self.onStatusChanged = onStatusChanged
     }
 
@@ -30,7 +32,7 @@ struct ProfileDetailView: View {
 
         ScrollView {
 
-            VStack(spacing: 20) {
+            VStack(spacing: 24) {
 
                 profileImage
 
@@ -40,9 +42,7 @@ struct ProfileDetailView: View {
 
                 locationInformation
 
-                statusSection
-
-                actionButtons
+                statusAndActions
             }
             .padding()
         }
@@ -68,6 +68,8 @@ struct ProfileDetailView: View {
             Text(viewModel.errorMessage ?? "")
         }
     }
+
+    // MARK: - Image
 
     private var profileImage: some View {
 
@@ -106,6 +108,8 @@ struct ProfileDetailView: View {
         .clipShape(Circle())
     }
 
+    // MARK: - Basic Information
+
     private var profileInformation: some View {
 
         VStack(spacing: 8) {
@@ -115,15 +119,20 @@ struct ProfileDetailView: View {
                 .fontWeight(.bold)
 
             Text(
-                "\(viewModel.profile.age) • \(viewModel.profile.country)"
+                "\(viewModel.profile.age) • " +
+                viewModel.profile.country
             )
             .font(.subheadline)
             .foregroundStyle(.secondary)
 
-            Text(viewModel.profile.gender.capitalized)
-                .foregroundStyle(.secondary)
+            Text(
+                viewModel.profile.gender.capitalized
+            )
+            .foregroundStyle(.secondary)
         }
     }
+
+    // MARK: - Contact
 
     private var contactInformation: some View {
 
@@ -147,6 +156,8 @@ struct ProfileDetailView: View {
             alignment: .leading
         )
     }
+
+    // MARK: - Location
 
     private var locationInformation: some View {
 
@@ -172,50 +183,53 @@ struct ProfileDetailView: View {
         )
     }
 
-    private var statusSection: some View {
+    // MARK: - Status / Actions
 
-        Group {
+    @ViewBuilder
+    private var statusAndActions: some View {
 
-            switch viewModel.profile.status {
+        switch viewModel.profile.status {
 
-            case .pending:
-                Label(
-                    "Pending",
-                    systemImage: "clock"
-                )
+        case .pending:
 
-            case .accepted:
-                Label(
-                    "Accepted",
-                    systemImage: "checkmark.circle.fill"
-                )
-                .foregroundStyle(.green)
+            actionButtons
 
-            case .declined:
-                Label(
-                    "Declined",
-                    systemImage: "xmark.circle.fill"
-                )
-                .foregroundStyle(.red)
-            }
+        case .accepted:
+
+            statusView(
+                text: "Accepted",
+                systemImage: "checkmark.circle.fill"
+            )
+
+        case .declined:
+
+            statusView(
+                text: "Declined",
+                systemImage: "xmark.circle.fill"
+            )
         }
-        .font(.headline)
     }
+
+    // MARK: - Action Buttons
 
     private var actionButtons: some View {
 
-        HStack(spacing: 16) {
-            
+        HStack(spacing: 12) {
+
             Button {
                 Task {
+
                     let success =
-                    await viewModel.updateStatus(.declined)
-                    
+                        await viewModel.updateStatus(
+                            .declined
+                        )
+
                     if success {
                         onStatusChanged(.declined)
                     }
                 }
             } label: {
+
                 Label(
                     "Decline",
                     systemImage: "xmark"
@@ -223,17 +237,21 @@ struct ProfileDetailView: View {
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            
+
             Button {
                 Task {
+
                     let success =
-                    await viewModel.updateStatus(.accepted)
-                    
+                        await viewModel.updateStatus(
+                            .accepted
+                        )
+
                     if success {
                         onStatusChanged(.accepted)
                     }
                 }
             } label: {
+
                 Label(
                     "Accept",
                     systemImage: "checkmark"
@@ -242,5 +260,26 @@ struct ProfileDetailView: View {
             }
             .buttonStyle(.borderedProminent)
         }
+    }
+
+    // MARK: - Status
+
+    private func statusView(
+        text: String,
+        systemImage: String
+    ) -> some View {
+
+        Label(
+            text,
+            systemImage: systemImage
+        )
+        .font(.title3)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .foregroundStyle(
+            text == "Accepted"
+            ? .green
+            : .red
+        )
     }
 }
