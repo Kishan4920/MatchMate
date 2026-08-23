@@ -28,23 +28,16 @@ final class ProfileDetailViewModel: ObservableObject {
     func updateStatus(
         _ status: ProfileStatus
     ) async -> Bool {
-
         do {
-
             try await repository.updateStatus(
                 profileID: profile.id,
                 status: status
             )
-
             profile.status = status
-
             return true
-
         } catch {
-
             errorMessage =
                 error.localizedDescription
-
             return false
         }
     }

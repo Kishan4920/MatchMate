@@ -27,32 +27,27 @@ struct ProfileListView: View {
     var body: some View {
 
         NavigationStack {
-
             ScrollView {
-
                 LazyVStack(spacing: 16) {
-
                     ForEach(viewModel.profiles) { profile in
-
                         ProfileCardView(
                             profile: profile,
 
-                            detailView: AnyView(
-                                ProfileDetailView(
-                                    profile: profile,
-                                    repository: repository
-                                ) { newStatus in
+                            destination: ProfileDetailView(
+                                profile: profile,
+                                repository: repository
+                            ) { newStatus in
 
-                                    Task {
-                                        await viewModel.updateStatus(
-                                            profileID: profile.id,
-                                            status: newStatus
-                                        )
-                                    }
+                                Task {
+                                    await viewModel.updateStatus(
+                                        profileID: profile.id,
+                                        status: newStatus
+                                    )
                                 }
-                            ),
+                            },
 
                             onAccept: {
+
                                 Task {
                                     await viewModel.updateStatus(
                                         profileID: profile.id,
@@ -62,6 +57,7 @@ struct ProfileListView: View {
                             },
 
                             onDecline: {
+
                                 Task {
                                     await viewModel.updateStatus(
                                         profileID: profile.id,
@@ -82,6 +78,7 @@ struct ProfileListView: View {
                     }
 
                     if viewModel.isLoadingMore {
+
                         ProgressView()
                             .padding()
                     }

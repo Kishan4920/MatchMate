@@ -7,15 +7,13 @@
 
 import Foundation
 import Combine
+
 @MainActor
 final class ProfileListViewModel: ObservableObject {
 
     @Published private(set) var profiles: [Profile] = []
-
     @Published private(set) var isLoading = false
-
     @Published private(set) var isLoadingMore = false
-
     @Published var errorMessage: String?
 
     private let repository: ProfileRepository
@@ -26,6 +24,8 @@ final class ProfileListViewModel: ObservableObject {
         self.repository = repository
     }
 
+    // MARK: - Initial Load
+
     func loadProfiles() async {
 
         guard !hasLoadedInitialData else {
@@ -34,16 +34,23 @@ final class ProfileListViewModel: ObservableObject {
 
         hasLoadedInitialData = true
 
-        // First show cached data
+        // First show cached profiles.
         do {
-            profiles = try await repository.loadCachedProfiles()
+
+            profiles =
+                try await repository.loadCachedProfiles()
+
         } catch {
-            errorMessage = error.localizedDescription
+
+            errorMessage =
+                error.localizedDescription
         }
 
-        // Then fetch latest data
+        // Then fetch latest page.
         await loadNextPage()
     }
+
+    // MARK: - Pagination
 
     func loadNextPage() async {
 
@@ -52,6 +59,7 @@ final class ProfileListViewModel: ObservableObject {
         }
 
         isLoadingMore = true
+
         defer {
             isLoadingMore = false
         }
@@ -76,7 +84,9 @@ final class ProfileListViewModel: ObservableObject {
 
         guard
             let index = profiles.firstIndex(
-                where: { $0.id == currentItem.id }
+                where: {
+                    $0.id == currentItem.id
+                }
             )
         else {
             return
@@ -86,9 +96,12 @@ final class ProfileListViewModel: ObservableObject {
             max(profiles.count - 3, 0)
 
         if index >= threshold {
+
             await loadNextPage()
         }
     }
+
+    // MARK: - Status
 
     func updateStatus(
         profileID: String,
@@ -96,39 +109,23 @@ final class ProfileListViewModel: ObservableObject {
     ) async {
 
         do {
-
+            // Persist first.
             try await repository.updateStatus(
                 profileID: profileID,
                 status: status
             )
-
-            if let index = profiles.firstIndex(
-                where: { $0.id == profileID }
-            ) {
-
-                let oldProfile = profiles[index]
-
-                profiles[index] = Profile(
-                    id: oldProfile.id,
-                    title: oldProfile.title,
-                    firstName: oldProfile.firstName,
-                    lastName: oldProfile.lastName,
-                    gender: oldProfile.gender,
-                    email: oldProfile.email,
-                    phone: oldProfile.phone,
-                    age: oldProfile.age,
-                    dateOfBirth: oldProfile.dateOfBirth,
-                    registeredDate: oldProfile.registeredDate,
-                    city: oldProfile.city,
-                    state: oldProfile.state,
-                    country: oldProfile.country,
-                    nationality: oldProfile.nationality,
-                    largeImageURL: oldProfile.largeImageURL,
-                    mediumImageURL: oldProfile.mediumImageURL,
-                    thumbnailImageURL: oldProfile.thumbnailImageURL,
-                    status: status
-                )
+            // Update UI only after persistence succeeds.
+            guard let index =
+                    profiles.firstIndex(
+                        where: {
+                            $0.id == profileID
+                        }
+                    )
+            else {
+                return
             }
+
+            profiles[index].status = status
 
         } catch {
 
