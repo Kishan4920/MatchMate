@@ -11,12 +11,12 @@ struct ProfileDetailView: View {
 
     @StateObject private var viewModel: ProfileDetailViewModel
 
-    let onStatusChanged: (ProfileStatus) -> Void
+    let onStatusChanged: (ProfileStatus) async -> Bool
 
     init(
         profile: Profile,
         repository: ProfileRepository,
-        onStatusChanged: @escaping (ProfileStatus) -> Void
+        onStatusChanged: @escaping (ProfileStatus) async -> Bool
     ) {
         _viewModel = StateObject(
             wrappedValue: ProfileDetailViewModel(
@@ -49,6 +49,7 @@ struct ProfileDetailView: View {
         .background(Color(uiColor: .systemGroupedBackground).ignoresSafeArea())
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
+        .accessibilityIdentifier("profile-detail")
         .alert(
             "Something went wrong",
             isPresented: Binding(
@@ -203,10 +204,12 @@ struct ProfileDetailView: View {
             case .accepted:
 
                 StatusTextView(status: .accepted)
+                    .accessibilityIdentifier("status")
 
             case .declined:
 
                 StatusTextView(status: .declined)
+                    .accessibilityIdentifier("status")
             }
         }
         .frame(maxWidth: .infinity)
@@ -227,10 +230,11 @@ struct ProfileDetailView: View {
                         )
 
                     if success {
-                        onStatusChanged(.declined)
+                        await onStatusChanged(.declined)
                     }
                 }
             }
+            .accessibilityIdentifier("detail-decline-button")
 
             StatusButton(status: .accepted) {
                 Task {
@@ -241,10 +245,11 @@ struct ProfileDetailView: View {
                         )
 
                     if success {
-                        onStatusChanged(.accepted)
+                        await onStatusChanged(.accepted)
                     }
                 }
             }
+            .accessibilityIdentifier("detail-accept-button")
         }
     }
 }

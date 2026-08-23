@@ -8,36 +8,97 @@
 import XCTest
 
 final class MatchMateUITests: XCTestCase {
+    @MainActor
+    func testAppLaunchesWithDeterministicProfile() {
+        let app = launchApp()
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        XCTAssertTrue(app.navigationBars["MatchMate"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Ada Lovelace"].waitForExistence(timeout: 5))
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testAcceptFromListChangesStatusWithoutOpeningDetail() {
+        let app = launchApp()
+        let acceptButton = app.buttons["accept-button"].firstMatch
+
+        XCTAssertTrue(acceptButton.waitForExistence(timeout: 5))
+        acceptButton.tap()
+
+        XCTAssertTrue(status(in: app).waitForExistence(timeout: 3))
+        XCTAssertFalse(app.navigationBars["Profile"].exists)
+        XCTAssertFalse(app.buttons["accept-button"].exists)
+        XCTAssertFalse(app.buttons["decline-button"].exists)
+    }
+
+    @MainActor
+    func testDeclineFromListChangesStatusWithoutOpeningDetail() {
+        let app = launchApp()
+        let declineButton = app.buttons["decline-button"].firstMatch
+
+        XCTAssertTrue(declineButton.waitForExistence(timeout: 5))
+        declineButton.tap()
+
+        XCTAssertTrue(status(in: app).waitForExistence(timeout: 3))
+        XCTAssertFalse(app.navigationBars["Profile"].exists)
+        XCTAssertFalse(app.buttons["accept-button"].exists)
+        XCTAssertFalse(app.buttons["decline-button"].exists)
+    }
+
+    @MainActor
+    func testProfileContentOpensDetail() {
+        let app = launchApp()
+        let profileContent = app.links["profile-content"].firstMatch
+
+        XCTAssertTrue(profileContent.waitForExistence(timeout: 5))
+        profileContent.tap()
+
+        XCTAssertTrue(app.navigationBars["Profile"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["ada@example.com"].exists)
+    }
+
+    @MainActor
+    func testAcceptFromDetailChangesStatus() {
+        let app = launchDetail()
+        let acceptButton = app.buttons["detail-accept-button"]
+
+        XCTAssertTrue(acceptButton.waitForExistence(timeout: 3))
+        acceptButton.tap()
+
+        XCTAssertTrue(status(in: app).waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["detail-accept-button"].exists)
+        XCTAssertFalse(app.buttons["detail-decline-button"].exists)
+    }
+
+    @MainActor
+    func testDeclineFromDetailChangesStatus() {
+        let app = launchDetail()
+        let declineButton = app.buttons["detail-decline-button"]
+
+        XCTAssertTrue(declineButton.waitForExistence(timeout: 3))
+        declineButton.tap()
+
+        XCTAssertTrue(status(in: app).waitForExistence(timeout: 3))
+        XCTAssertFalse(app.buttons["detail-accept-button"].exists)
+        XCTAssertFalse(app.buttons["detail-decline-button"].exists)
+    }
+
+    private func launchDetail() -> XCUIApplication {
+        let app = launchApp()
+        let profileContent = app.links["profile-content"].firstMatch
+        XCTAssertTrue(profileContent.waitForExistence(timeout: 5))
+        profileContent.tap()
+        XCTAssertTrue(app.navigationBars["Profile"].waitForExistence(timeout: 3))
+        return app
+    }
+
+    private func launchApp() -> XCUIApplication {
         let app = XCUIApplication()
+        app.launchArguments = ["-ui-testing"]
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
+        return app
     }
 
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
+    private func status(in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any)["status"].firstMatch
     }
 }

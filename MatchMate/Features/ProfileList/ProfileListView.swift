@@ -29,6 +29,15 @@ struct ProfileListView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 16) {
+                    if viewModel.isOffline {
+                        Label("Showing saved profiles", systemImage: "wifi.slash")
+                            .font(.footnote.weight(.medium))
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal)
+                            .accessibilityIdentifier("offline-banner")
+                    }
+
                     ForEach(viewModel.profiles) { profile in
                         ProfileCardView(
                             profile: profile,
@@ -37,13 +46,10 @@ struct ProfileListView: View {
                                 profile: profile,
                                 repository: repository
                             ) { newStatus in
-
-                                Task {
-                                    await viewModel.updateStatus(
-                                        profileID: profile.id,
-                                        status: newStatus
-                                    )
-                                }
+                                await viewModel.updateStatus(
+                                    profileID: profile.id,
+                                    status: newStatus
+                                )
                             },
 
                             onAccept: {
@@ -67,6 +73,7 @@ struct ProfileListView: View {
                             }
                         )
                         .padding(.horizontal)
+                        .accessibilityIdentifier("profile-card-\(profile.id)")
                         .onAppear {
 
                             Task {
@@ -86,6 +93,14 @@ struct ProfileListView: View {
                 .padding(.vertical)
             }
             .navigationTitle("MatchMate")
+            .alert("Unable to Load Profiles", isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(viewModel.errorMessage ?? "")
+            }
             .task {
                 await viewModel.loadProfiles()
             }

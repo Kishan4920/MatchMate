@@ -6,12 +6,8 @@
 //
 //
 
-public import Foundation
-public import CoreData
+import CoreData
 
-public typealias ProfileEntityCoreDataClassSet = NSSet
-
-
+@objc(ProfileEntity)
 public class ProfileEntity: NSManagedObject {
-
 }

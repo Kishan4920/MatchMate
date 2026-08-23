@@ -12,8 +12,8 @@ import Combine
 final class ProfileListViewModel: ObservableObject {
 
     @Published private(set) var profiles: [Profile] = []
-    @Published private(set) var isLoading = false
     @Published private(set) var isLoadingMore = false
+    @Published private(set) var isOffline = false
     @Published var errorMessage: String?
 
     private let repository: ProfileRepository
@@ -39,6 +39,7 @@ final class ProfileListViewModel: ObservableObject {
 
             profiles =
                 try await repository.loadCachedProfiles()
+            errorMessage = nil
 
         } catch {
 
@@ -46,7 +47,7 @@ final class ProfileListViewModel: ObservableObject {
                 error.localizedDescription
         }
 
-        // Then fetch latest page.
+        // Refresh from the network while keeping usable cached data on screen.
         await loadNextPage()
     }
 
@@ -70,11 +71,15 @@ final class ProfileListViewModel: ObservableObject {
                 try await repository.fetchNextPage()
 
             profiles = updatedProfiles
+            isOffline = false
+            errorMessage = nil
 
         } catch {
-
-            errorMessage =
-                error.localizedDescription
+            if profiles.isEmpty {
+                errorMessage = error.localizedDescription
+            } else {
+                isOffline = true
+            }
         }
     }
 
@@ -106,7 +111,7 @@ final class ProfileListViewModel: ObservableObject {
     func updateStatus(
         profileID: String,
         status: ProfileStatus
-    ) async {
+    ) async -> Bool {
 
         do {
             // Persist first.
@@ -122,15 +127,18 @@ final class ProfileListViewModel: ObservableObject {
                         }
                     )
             else {
-                return
+                return false
             }
 
             profiles[index].status = status
+            errorMessage = nil
+            return true
 
         } catch {
 
             errorMessage =
                 error.localizedDescription
+            return false
         }
     }
 }

@@ -13,6 +13,7 @@
         <attribute name="lastName" optional="YES" attributeType="String"/>
         <attribute name="mediumImageURL" optional="YES" attributeType="String"/>
         <attribute name="nationality" optional="YES" attributeType="String"/>
+        <attribute name="page" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="phone" optional="YES" attributeType="String"/>
         <attribute name="registeredDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="sortIndex" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
