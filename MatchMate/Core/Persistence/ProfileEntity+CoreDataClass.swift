@@ -11,7 +11,7 @@ public import CoreData
 
 public typealias ProfileEntityCoreDataClassSet = NSSet
 
-@objc(ProfileEntity)
+
 public class ProfileEntity: NSManagedObject {
 
 }

@@ -13,16 +13,15 @@ struct AppContainer {
 
     static func live() -> AppContainer {
 
-        let apiClient =
-            URLSessionAPIClient()
+        let apiClient = URLSessionAPIClient()
 
-        let persistence =
+        let persistenceController =
             PersistenceController.shared
 
         let repository =
             DefaultProfileRepository(
                 apiClient: apiClient,
-                persistenceController: persistence
+                persistenceController: persistenceController
             )
 
         return AppContainer(
