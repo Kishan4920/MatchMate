@@ -10,111 +10,126 @@ import SwiftUI
 struct ProfileCardView: View {
 
     let profile: Profile
+    let detailView: AnyView
 
     let onAccept: () -> Void
     let onDecline: () -> Void
 
     var body: some View {
 
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 0) {
 
-            AsyncImage(
-                url: URL(
-                    string: profile.largeImageURL
-                )
-            ) { phase in
+            // MARK: - Tappable Profile Area
 
-                switch phase {
+            NavigationLink {
+                detailView
+            } label: {
 
-                case .empty:
-                    ProgressView()
+                VStack(alignment: .leading, spacing: 12) {
 
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
+                    AsyncImage(
+                        url: URL(
+                            string: profile.largeImageURL
+                        )
+                    ) { phase in
 
-                case .failure:
-                    Image(systemName: "person.crop.circle")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(40)
+                        switch phase {
 
-                @unknown default:
-                    EmptyView()
+                        case .empty:
+                            ProgressView()
+
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+
+                        case .failure:
+                            Image(
+                                systemName: "person.crop.circle"
+                            )
+                            .resizable()
+                            .scaledToFit()
+                            .padding(40)
+
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                    .frame(height: 220)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+
+                    VStack(alignment: .leading, spacing: 6) {
+
+                        Text(profile.fullName)
+                            .font(.title3)
+                            .fontWeight(.semibold)
+
+                        Text(
+                            "\(profile.age) • \(profile.country)"
+                        )
+                        .foregroundStyle(.secondary)
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 16)
                 }
             }
-            .frame(height: 220)
-            .frame(maxWidth: .infinity)
-            .clipped()
+            .buttonStyle(.plain)
 
-            VStack(alignment: .leading, spacing: 6) {
+            // MARK: - Status / Actions
 
-                Text(profile.fullName)
-                    .font(.title3)
-                    .fontWeight(.semibold)
+            switch profile.status {
 
-                Text(
-                    "\(profile.age) • \(profile.country)"
-                )
-                .foregroundStyle(.secondary)
+            case .pending:
 
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
 
-                    Button("Decline") {
+                    Button {
                         onDecline()
+                    } label: {
+                        Text("Decline")
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.bordered)
 
-                    Button("Accept") {
+                    Button {
                         onAccept()
+                    } label: {
+                        Text("Accept")
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                 }
+                .padding(.horizontal)
+                .padding(.bottom, 16)
 
-                statusView
+            case .accepted:
+
+                Label(
+                    "Accepted",
+                    systemImage: "checkmark.circle.fill"
+                )
+                .foregroundStyle(.green)
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 16)
+
+            case .declined:
+
+                Label(
+                    "Declined",
+                    systemImage: "xmark.circle.fill"
+                )
+                .foregroundStyle(.red)
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 16)
             }
-            .padding(.horizontal)
-            .padding(.bottom)
         }
-        .background(
-            RoundedRectangle(
-                cornerRadius: 16
-            )
-            .fill(.background)
-        )
+        .background(.background)
         .clipShape(
-            RoundedRectangle(
-                cornerRadius: 16
-            )
+            RoundedRectangle(cornerRadius: 16)
         )
-        .shadow(
-            radius: 5,
-            y: 2
-        )
-    }
-
-    @ViewBuilder
-    private var statusView: some View {
-
-        switch profile.status {
-
-        case .pending:
-            EmptyView()
-
-        case .accepted:
-            Label(
-                "Accepted",
-                systemImage: "checkmark.circle.fill"
-            )
-            .foregroundStyle(.green)
-
-        case .declined:
-            Label(
-                "Declined",
-                systemImage: "xmark.circle.fill"
-            )
-            .foregroundStyle(.red)
-        }
+        .shadow(radius: 5)
     }
 }

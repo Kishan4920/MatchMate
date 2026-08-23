@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Profile: Identifiable, Equatable {
+struct Profile: Identifiable, Equatable, Hashable {
     let id: String
 
     let title: String

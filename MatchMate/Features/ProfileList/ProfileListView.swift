@@ -9,16 +9,18 @@ import SwiftUI
 
 struct ProfileListView: View {
 
-    @StateObject private var viewModel:
-        ProfileListViewModel
+    @StateObject private var viewModel: ProfileListViewModel
+
+    private let repository: ProfileRepository
 
     init(repository: ProfileRepository) {
 
+        self.repository = repository
+
         _viewModel = StateObject(
-            wrappedValue:
-                ProfileListViewModel(
-                    repository: repository
-                )
+            wrappedValue: ProfileListViewModel(
+                repository: repository
+            )
         )
     }
 
@@ -34,6 +36,21 @@ struct ProfileListView: View {
 
                         ProfileCardView(
                             profile: profile,
+
+                            detailView: AnyView(
+                                ProfileDetailView(
+                                    profile: profile,
+                                    repository: repository
+                                ) { newStatus in
+
+                                    Task {
+                                        await viewModel.updateStatus(
+                                            profileID: profile.id,
+                                            status: newStatus
+                                        )
+                                    }
+                                }
+                            ),
 
                             onAccept: {
                                 Task {
@@ -55,6 +72,7 @@ struct ProfileListView: View {
                         )
                         .padding(.horizontal)
                         .onAppear {
+
                             Task {
                                 await viewModel.loadMoreIfNeeded(
                                     currentItem: profile
