@@ -46,6 +46,7 @@ struct ProfileDetailView: View {
             }
             .padding()
         }
+        .background(Color(uiColor: .systemGroupedBackground).ignoresSafeArea())
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
         .alert(
@@ -155,6 +156,8 @@ struct ProfileDetailView: View {
             maxWidth: .infinity,
             alignment: .leading
         )
+        .padding()
+        .background(.background, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     // MARK: - Location
@@ -181,6 +184,8 @@ struct ProfileDetailView: View {
             maxWidth: .infinity,
             alignment: .leading
         )
+        .padding()
+        .background(.background, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     // MARK: - Status / Actions
@@ -188,26 +193,23 @@ struct ProfileDetailView: View {
     @ViewBuilder
     private var statusAndActions: some View {
 
-        switch viewModel.profile.status {
+        Group {
+            switch viewModel.profile.status {
 
-        case .pending:
+            case .pending:
 
-            actionButtons
+                actionButtons
 
-        case .accepted:
+            case .accepted:
 
-            statusView(
-                text: "Accepted",
-                systemImage: "checkmark.circle.fill"
-            )
+                StatusTextView(status: .accepted)
 
-        case .declined:
+            case .declined:
 
-            statusView(
-                text: "Declined",
-                systemImage: "xmark.circle.fill"
-            )
+                StatusTextView(status: .declined)
+            }
         }
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Action Buttons
@@ -216,7 +218,7 @@ struct ProfileDetailView: View {
 
         HStack(spacing: 12) {
 
-            Button {
+            StatusButton(status: .declined) {
                 Task {
 
                     let success =
@@ -228,17 +230,9 @@ struct ProfileDetailView: View {
                         onStatusChanged(.declined)
                     }
                 }
-            } label: {
-
-                Label(
-                    "Decline",
-                    systemImage: "xmark"
-                )
-                .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.bordered)
 
-            Button {
+            StatusButton(status: .accepted) {
                 Task {
 
                     let success =
@@ -250,36 +244,7 @@ struct ProfileDetailView: View {
                         onStatusChanged(.accepted)
                     }
                 }
-            } label: {
-
-                Label(
-                    "Accept",
-                    systemImage: "checkmark"
-                )
-                .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
         }
-    }
-
-    // MARK: - Status
-
-    private func statusView(
-        text: String,
-        systemImage: String
-    ) -> some View {
-
-        Label(
-            text,
-            systemImage: systemImage
-        )
-        .font(.title3)
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 14)
-        .foregroundStyle(
-            text == "Accepted"
-            ? .green
-            : .red
-        )
     }
 }

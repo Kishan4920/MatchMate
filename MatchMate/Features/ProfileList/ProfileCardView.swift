@@ -33,11 +33,18 @@ struct ProfileCardView<Destination: View>: View {
             actionSection
                 .padding(.bottom)
         }
-        .background(.background)
+        .background {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(.background)
+        }
         .clipShape(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
         )
-        .shadow(radius: 5)
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Color.primary.opacity(0.08), lineWidth: 1)
+        }
+        .shadow(color: .black.opacity(0.09), radius: 14, y: 6)
     }
 
     // MARK: - Profile Content
@@ -90,16 +97,18 @@ struct ProfileCardView<Destination: View>: View {
             VStack(alignment: .leading, spacing: 6) {
 
                 Text(profile.fullName)
-                    .font(.title3)
-                    .fontWeight(.semibold)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
 
                 Text(
                     "\(profile.age) • \(profile.country)"
                 )
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
             }
             .padding(.horizontal)
-            .padding(.bottom, 16)
+            .padding(.top, 2)
+            .padding(.bottom, 18)
         }
     }
 
@@ -116,52 +125,31 @@ struct ProfileCardView<Destination: View>: View {
 
                 HStack(spacing: 12) {
 
-                    Button {
+                    StatusButton(status: .declined) {
                         onDecline()
-                    } label: {
-
-                        Label(
-                            "Decline",
-                            systemImage: "xmark"
-                        )
-                        .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.bordered)
 
-                    Button {
+                    StatusButton(status: .accepted) {
                         onAccept()
-                    } label: {
-
-                        Label(
-                            "Accept",
-                            systemImage: "checkmark"
-                        )
-                        .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
                 }
 
             case .accepted:
 
-                Label(
-                    "Accepted",
-                    systemImage: "checkmark.circle.fill"
-                )
-                .foregroundStyle(.green)
-                .font(.title3)
+                StatusTextView(status: .accepted)
 
             case .declined:
 
-                Label(
-                    "Declined",
-                    systemImage: "xmark.circle.fill"
-                )
-                .foregroundStyle(.red)
-                .font(.title3)
+                StatusTextView(status: .declined)
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 52)
+        .frame(minHeight: 52)
         .padding(.horizontal)
+        .padding(.top, 12)
+        .overlay(alignment: .top) {
+            Divider()
+                .padding(.horizontal)
+        }
     }
 }
