@@ -11,7 +11,7 @@ final class MatchMateUITests: XCTestCase {
     @MainActor
     func testAppLaunchesWithDeterministicProfile() {
         let app = launchApp()
-
+        
         XCTAssertTrue(app.navigationBars["MatchMate"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Ada Lovelace"].waitForExistence(timeout: 5))
     }
@@ -47,7 +47,7 @@ final class MatchMateUITests: XCTestCase {
     @MainActor
     func testProfileContentOpensDetail() {
         let app = launchApp()
-        let profileContent = app.links[AccessibilityIdentifiers.profileContent].firstMatch
+        let profileContent = profileContent(in: app)
 
         XCTAssertTrue(profileContent.waitForExistence(timeout: 5))
         profileContent.tap()
@@ -84,7 +84,7 @@ final class MatchMateUITests: XCTestCase {
 
     private func launchDetail() -> XCUIApplication {
         let app = launchApp()
-        let profileContent = app.links[AccessibilityIdentifiers.profileContent].firstMatch
+        let profileContent = profileContent(in: app)
         XCTAssertTrue(profileContent.waitForExistence(timeout: 5))
         profileContent.tap()
         XCTAssertTrue(app.navigationBars["Profile"].waitForExistence(timeout: 3))
@@ -100,5 +100,9 @@ final class MatchMateUITests: XCTestCase {
 
     private func status(in app: XCUIApplication) -> XCUIElement {
         app.descendants(matching: .any)[AccessibilityIdentifiers.status].firstMatch
+    }
+
+    private func profileContent(in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any)[AccessibilityIdentifiers.profileContent].firstMatch
     }
 }

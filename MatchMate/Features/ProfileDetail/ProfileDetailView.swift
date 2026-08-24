@@ -199,7 +199,10 @@ struct ProfileDetailView: View {
 
         HStack(spacing: 12) {
 
-            StatusButton(status: .declined) {
+            StatusButton(
+                status: .declined,
+                accessibilityIdentifier: AccessibilityIdentifiers.detailDeclineButton
+            ) {
                 Task {
 
                     let success =
@@ -212,9 +215,11 @@ struct ProfileDetailView: View {
                     }
                 }
             }
-            .accessibilityIdentifier(AccessibilityIdentifiers.detailDeclineButton)
 
-            StatusButton(status: .accepted) {
+            StatusButton(
+                status: .accepted,
+                accessibilityIdentifier: AccessibilityIdentifiers.detailAcceptButton
+            ) {
                 Task {
 
                     let success =
@@ -227,7 +232,6 @@ struct ProfileDetailView: View {
                     }
                 }
             }
-            .accessibilityIdentifier(AccessibilityIdentifiers.detailAcceptButton)
         }
     }
 }

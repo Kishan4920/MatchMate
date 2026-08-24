@@ -73,7 +73,6 @@ struct ProfileListView: View {
                             }
                         )
                         .padding(.horizontal)
-                        .accessibilityIdentifier(AccessibilityIdentifiers.profileCard)
                         .onAppear {
 
                             Task {

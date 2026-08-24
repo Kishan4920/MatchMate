@@ -28,9 +28,9 @@ private extension RandomUserResponse {
                 registered: RegisteredDTO(date: "2020-01-01T00:00:00.000Z", age: 6),
                 phone: "+44 0000 000000",
                 picture: PictureDTO(
-                    large: "https://example.com/large.jpg",
-                    medium: "https://example.com/medium.jpg",
-                    thumbnail: "https://example.com/thumb.jpg"
+                    large: "https://randomuser.me/api/portraits/women/21.jpg",
+                    medium: "https://randomuser.me/api/portraits/med/women/21.jpg",
+                    thumbnail: "https://randomuser.me/api/portraits/thumb/women/21.jpg"
                 ),
                 nationality: "GB"
             )

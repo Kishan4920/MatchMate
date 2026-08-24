@@ -97,15 +97,19 @@ struct ProfileCardView<Destination: View>: View {
 
                 HStack(spacing: 12) {
 
-                    StatusButton(status: .declined) {
+                    StatusButton(
+                        status: .declined,
+                        accessibilityIdentifier: AccessibilityIdentifiers.declineButton
+                    ) {
                         onDecline()
                     }
-                    .accessibilityIdentifier(AccessibilityIdentifiers.declineButton)
 
-                    StatusButton(status: .accepted) {
+                    StatusButton(
+                        status: .accepted,
+                        accessibilityIdentifier: AccessibilityIdentifiers.acceptButton
+                    ) {
                         onAccept()
                     }
-                    .accessibilityIdentifier(AccessibilityIdentifiers.acceptButton)
                 }
 
             case .accepted:

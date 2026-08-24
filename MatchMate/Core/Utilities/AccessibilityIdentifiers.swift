@@ -9,7 +9,6 @@ import Foundation
 
 public enum AccessibilityIdentifiers {
     public static var profileContent: String { "profile-content" }
-    public static var profileCard: String { "profile-card" }
     public static var acceptButton: String { "accept-button" }
     public static var declineButton: String { "decline-button" }
     public static var status: String { "status" }

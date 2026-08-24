@@ -9,13 +9,25 @@ import SwiftUI
 
 struct StatusButton: View {
     let status: ProfileStatus
+    let accessibilityIdentifier: String
     let action: () -> Void
+
+    init(
+        status: ProfileStatus,
+        accessibilityIdentifier: String,
+        action: @escaping () -> Void
+    ) {
+        self.status = status
+        self.accessibilityIdentifier = accessibilityIdentifier
+        self.action = action
+    }
 
     var body: some View {
         Button(action: action) {
             Label(status.actionTitle, systemImage: status.actionSystemImage)
                 .frame(maxWidth: .infinity)
         }
+        .accessibilityIdentifier(accessibilityIdentifier)
         .buttonStyle(StatusButtonStyle(status: status))
     }
 }
