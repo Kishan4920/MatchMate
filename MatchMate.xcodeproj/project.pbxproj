@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A10000010000000000000001 /* AccessibilityIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000020000000000000001 /* AccessibilityIdentifiers.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		EBCD33EA303B2E4900385B8F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A10000020000000000000001 /* AccessibilityIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchMate/Core/Utilities/AccessibilityIdentifiers.swift; sourceTree = SOURCE_ROOT; };
 		EBCD33D7303B2E4800385B8F /* MatchMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MatchMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBCD33E9303B2E4900385B8F /* MatchMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatchMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBCD33F3303B2E4900385B8F /* MatchMateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatchMateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -250,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000010000000000000001 /* AccessibilityIdentifiers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
