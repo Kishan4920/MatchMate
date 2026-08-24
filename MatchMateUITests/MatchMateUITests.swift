@@ -19,35 +19,35 @@ final class MatchMateUITests: XCTestCase {
     @MainActor
     func testAcceptFromListChangesStatusWithoutOpeningDetail() {
         let app = launchApp()
-        let acceptButton = app.buttons["accept-button"].firstMatch
+        let acceptButton = app.buttons[AccessibilityIdentifiers.acceptButton].firstMatch
 
         XCTAssertTrue(acceptButton.waitForExistence(timeout: 5))
         acceptButton.tap()
 
         XCTAssertTrue(status(in: app).waitForExistence(timeout: 3))
         XCTAssertFalse(app.navigationBars["Profile"].exists)
-        XCTAssertFalse(app.buttons["accept-button"].exists)
-        XCTAssertFalse(app.buttons["decline-button"].exists)
+        XCTAssertFalse(app.buttons[AccessibilityIdentifiers.acceptButton].exists)
+        XCTAssertFalse(app.buttons[AccessibilityIdentifiers.declineButton].exists)
     }
 
     @MainActor
     func testDeclineFromListChangesStatusWithoutOpeningDetail() {
         let app = launchApp()
-        let declineButton = app.buttons["decline-button"].firstMatch
+        let declineButton = app.buttons[AccessibilityIdentifiers.declineButton].firstMatch
 
         XCTAssertTrue(declineButton.waitForExistence(timeout: 5))
         declineButton.tap()
 
         XCTAssertTrue(status(in: app).waitForExistence(timeout: 3))
         XCTAssertFalse(app.navigationBars["Profile"].exists)
-        XCTAssertFalse(app.buttons["accept-button"].exists)
-        XCTAssertFalse(app.buttons["decline-button"].exists)
+        XCTAssertFalse(app.buttons[AccessibilityIdentifiers.acceptButton].exists)
+        XCTAssertFalse(app.buttons[AccessibilityIdentifiers.declineButton].exists)
     }
 
     @MainActor
     func testProfileContentOpensDetail() {
         let app = launchApp()
-        let profileContent = app.links["profile-content"].firstMatch
+        let profileContent = app.links[AccessibilityIdentifiers.profileContent].firstMatch
 
         XCTAssertTrue(profileContent.waitForExistence(timeout: 5))
         profileContent.tap()
@@ -59,32 +59,32 @@ final class MatchMateUITests: XCTestCase {
     @MainActor
     func testAcceptFromDetailChangesStatus() {
         let app = launchDetail()
-        let acceptButton = app.buttons["detail-accept-button"]
+        let acceptButton = app.buttons[AccessibilityIdentifiers.detailAcceptButton]
 
         XCTAssertTrue(acceptButton.waitForExistence(timeout: 3))
         acceptButton.tap()
 
         XCTAssertTrue(status(in: app).waitForExistence(timeout: 3))
-        XCTAssertFalse(app.buttons["detail-accept-button"].exists)
-        XCTAssertFalse(app.buttons["detail-decline-button"].exists)
+        XCTAssertFalse(app.buttons[AccessibilityIdentifiers.detailAcceptButton].exists)
+        XCTAssertFalse(app.buttons[AccessibilityIdentifiers.detailDeclineButton].exists)
     }
 
     @MainActor
     func testDeclineFromDetailChangesStatus() {
         let app = launchDetail()
-        let declineButton = app.buttons["detail-decline-button"]
+        let declineButton = app.buttons[AccessibilityIdentifiers.detailDeclineButton]
 
         XCTAssertTrue(declineButton.waitForExistence(timeout: 3))
         declineButton.tap()
 
         XCTAssertTrue(status(in: app).waitForExistence(timeout: 3))
-        XCTAssertFalse(app.buttons["detail-accept-button"].exists)
-        XCTAssertFalse(app.buttons["detail-decline-button"].exists)
+        XCTAssertFalse(app.buttons[AccessibilityIdentifiers.detailAcceptButton].exists)
+        XCTAssertFalse(app.buttons[AccessibilityIdentifiers.detailDeclineButton].exists)
     }
 
     private func launchDetail() -> XCUIApplication {
         let app = launchApp()
-        let profileContent = app.links["profile-content"].firstMatch
+        let profileContent = app.links[AccessibilityIdentifiers.profileContent].firstMatch
         XCTAssertTrue(profileContent.waitForExistence(timeout: 5))
         profileContent.tap()
         XCTAssertTrue(app.navigationBars["Profile"].waitForExistence(timeout: 3))
@@ -93,12 +93,12 @@ final class MatchMateUITests: XCTestCase {
 
     private func launchApp() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-ui-testing"]
+        app.launchArguments = [AccessibilityIdentifiers.uiTestingLaunchArgument]
         app.launch()
         return app
     }
 
     private func status(in app: XCUIApplication) -> XCUIElement {
-        app.descendants(matching: .any)["status"].firstMatch
+        app.descendants(matching: .any)[AccessibilityIdentifiers.status].firstMatch
     }
 }

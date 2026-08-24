@@ -27,7 +27,7 @@ struct ProfileCardView<Destination: View>: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityIdentifier("profile-content")
+            .accessibilityIdentifier(AccessibilityIdentifiers.profileContent)
 
             // MARK: - Action Area
 
@@ -100,23 +100,23 @@ struct ProfileCardView<Destination: View>: View {
                     StatusButton(status: .declined) {
                         onDecline()
                     }
-                    .accessibilityIdentifier("decline-button")
+                    .accessibilityIdentifier(AccessibilityIdentifiers.declineButton)
 
                     StatusButton(status: .accepted) {
                         onAccept()
                     }
-                    .accessibilityIdentifier("accept-button")
+                    .accessibilityIdentifier(AccessibilityIdentifiers.acceptButton)
                 }
 
             case .accepted:
 
                 StatusTextView(status: .accepted)
-                    .accessibilityIdentifier("status")
+                    .accessibilityIdentifier(AccessibilityIdentifiers.status)
 
             case .declined:
 
                 StatusTextView(status: .declined)
-                    .accessibilityIdentifier("status")
+                    .accessibilityIdentifier(AccessibilityIdentifiers.status)
             }
         }
         .frame(maxWidth: .infinity)

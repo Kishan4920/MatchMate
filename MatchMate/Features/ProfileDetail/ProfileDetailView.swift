@@ -49,7 +49,7 @@ struct ProfileDetailView: View {
         .background(Color(uiColor: .systemGroupedBackground).ignoresSafeArea())
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
-        .accessibilityIdentifier("profile-detail")
+        .accessibilityIdentifier(AccessibilityIdentifiers.detail)
         .alert(
             "Something went wrong",
             isPresented: Binding(
@@ -182,12 +182,12 @@ struct ProfileDetailView: View {
             case .accepted:
 
                 StatusTextView(status: .accepted)
-                    .accessibilityIdentifier("status")
+                    .accessibilityIdentifier(AccessibilityIdentifiers.status)
 
             case .declined:
 
                 StatusTextView(status: .declined)
-                    .accessibilityIdentifier("status")
+                    .accessibilityIdentifier(AccessibilityIdentifiers.status)
             }
         }
         .frame(maxWidth: .infinity)
@@ -212,7 +212,7 @@ struct ProfileDetailView: View {
                     }
                 }
             }
-            .accessibilityIdentifier("detail-decline-button")
+            .accessibilityIdentifier(AccessibilityIdentifiers.detailDeclineButton)
 
             StatusButton(status: .accepted) {
                 Task {
@@ -227,7 +227,7 @@ struct ProfileDetailView: View {
                     }
                 }
             }
-            .accessibilityIdentifier("detail-accept-button")
+            .accessibilityIdentifier(AccessibilityIdentifiers.detailAcceptButton)
         }
     }
 }

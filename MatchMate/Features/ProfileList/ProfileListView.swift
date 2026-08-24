@@ -35,7 +35,7 @@ struct ProfileListView: View {
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal)
-                            .accessibilityIdentifier("offline-banner")
+                            .accessibilityIdentifier(AccessibilityIdentifiers.offlineBanner)
                     }
 
                     ForEach(viewModel.profiles) { profile in
@@ -73,7 +73,7 @@ struct ProfileListView: View {
                             }
                         )
                         .padding(.horizontal)
-                        .accessibilityIdentifier("profile-card-\(profile.id)")
+                        .accessibilityIdentifier(AccessibilityIdentifiers.profileCard)
                         .onAppear {
 
                             Task {

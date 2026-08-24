@@ -24,7 +24,9 @@ struct AppContainer {
     }
 
     static func live() -> AppContainer {
-        if ProcessInfo.processInfo.arguments.contains("-ui-testing") {
+        if ProcessInfo.processInfo.arguments.contains(
+            AccessibilityIdentifiers.uiTestingLaunchArgument
+        ) {
             return AppContainer(
                 repository: UITestProfileRepository(),
                 persistenceController: PersistenceController(inMemory: true)
