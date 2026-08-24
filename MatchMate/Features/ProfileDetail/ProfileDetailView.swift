@@ -75,32 +75,10 @@ struct ProfileDetailView: View {
 
     private var profileImage: some View {
 
-        AsyncImage(
-            url: URL(
-                string: viewModel.profile.largeImageURL
-            )
-        ) { phase in
-
-            switch phase {
-
-            case .empty:
+        CachedRemoteImage(url: URL(string: viewModel.profile.largeImageURL)) {
+            ZStack {
+                Color.gray.opacity(0.1)
                 ProgressView()
-
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-
-            case .failure:
-                Image(
-                    systemName: "person.crop.circle"
-                )
-                .resizable()
-                .scaledToFit()
-                .padding(50)
-
-            @unknown default:
-                EmptyView()
             }
         }
         .frame(

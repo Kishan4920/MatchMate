@@ -53,39 +53,10 @@ struct ProfileCardView<Destination: View>: View {
     private var profileContent: some View {
 
         VStack(alignment: .leading, spacing: 12) {
-            AsyncImage(
-                url: URL(
-                    string: profile.largeImageURL
-                )
-            ) { phase in
-
-                switch phase {
-
-                case .empty:
-                    ZStack {
-                        Color.gray.opacity(0.1)
-                        ProgressView()
-                    }
-
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-
-                case .failure:
-                    ZStack {
-                        Color.gray.opacity(0.1)
-
-                        Image(
-                            systemName: "person.crop.circle"
-                        )
-                        .resizable()
-                        .scaledToFit()
-                        .padding(50)
-                    }
-
-                @unknown default:
-                    EmptyView()
+            CachedRemoteImage(url: URL(string: profile.largeImageURL)) {
+                ZStack {
+                    Color.gray.opacity(0.1)
+                    ProgressView()
                 }
             }
             .frame(
